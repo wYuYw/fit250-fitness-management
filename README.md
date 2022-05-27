@@ -18,7 +18,7 @@
 
 **Tool:** 
 
-- Vue.js, Spring Boot, MySQL, Material UI
+- Vue.js, Spring Boot(Restful API), MySQL, Material UI
 
 # ****Table of Contents****
 
@@ -62,10 +62,17 @@ You can visit the website through this link.
 ## 3. Structure
 
 ### Frontend
-- 
+- Components for user (mypage, signup, signin)
+- Components for interaction between users
+- Components for fitness videos
 
-### Backend
-- 
+### Backend + Database
+- Topics: User, Video, Comment, Friend, Fitness data
+- DTO, DAO
+- Mapper
+- Service
+- Controller
+- Util (JWT, SHA256)
 
 # ****Credits****
 
