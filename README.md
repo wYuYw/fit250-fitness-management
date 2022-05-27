@@ -4,22 +4,21 @@
 
 **Purpose:** 
 
-- Creating a website to reveal who I am and to join a great team that solve the problems in the world.
+- Creating a fitness service MVP(Minimum Viable Product) for students and developers
 
 **Challenge:** 
 
-- Should be able to show myself concisely
-- Should be highly readable
-- Should be easy to maintain and update
+- Should be attractive to potential users in order to form feedback loop
+- Should be scalable for further updates based on users' feedback
 
 **Solution:** 
 
-- Semantic Structure, Interaction - but not heavily, Minimal Design
-- Simple UI/UX, concise words, more pictures than words
+- Attractive UI/UX
+- Low dependencies among components and structures
 
 **Tool:** 
 
-- React.js, Scss, Sanity
+- Vue.js, Spring Boot, MySQL, Material UI
 
 # ****Table of Contents****
 
@@ -32,60 +31,54 @@
 
 # ****Usage****
 
-You can visit my portfolio website through this link.
+You can watch promotion video through this link.
 
-[Who is Sunsong](https://sunsong.netlify.app/)
+[Fit250 promotion](https://youtu.be/CmDBMZjj8tU)
+
+You can visit the website through this link.
+
+[Fit250]()
 
 # Project Details
 
 ## 1. Customer
 
-- Current and potential problem solvers in the world
-- Potential coworkers
+- Students
+- Developers
 
 ## 2. Key Considerations
 
-### Semantic Structure
+### Attractive UI/UX
 
-1. Allow logical arrangement of content
-2. Facilitate maintenance of website
+1. More images than words
+2. Concise design
+3. Using Material UI
 
-### Interaction, but not heavily
+### Low dependencies among components and structures
 
-1. Capture user attention
-2. Avoid distracting effects
-
-### Minimal Design
-
-1. Get the point succinctly
+1. Advantageous for teamwork with readable code
+2. Advantageous for maintenance
 
 ## 3. Structure
 
-### Wrapper
+### Frontend
+- 
 
-- Contain links of other related sources
-- Present in whole pages
-
-### Home
-
-- Reveal personal identity through vibe
-- Display my desk that make customers can feel and guess who I am
-
-### About
-
-- Describe what I pursue
-- Contain my character and ability
-
-### Works
-
-- Works that have been carried out
-- Contain links of github and online page if there are
-
-### Skills
-
-- Present skillsets
-- Present concise experiences
+### Backend
+- 
 
 # ****Credits****
 
-- Personal Project
+- wYuYw
+  - Design the service and business model
+  - Design webpage structure and tone
+  - Responsible for frontend
+  - Implement logic (functions)
+  - Implement interaction between frontend and backend(axios)
+  - Design database structure
+- [smj227b](https://github.com/smj227b)
+  - Responsible for backend
+  - Design backend structure
+  - Implement backend components
+  - Implement interaction between frontend and backend(controller)
+  - Implement database structure
