@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.fitness.model.dao.FriendDao">
+	<resultMap type="friend" id="friendMap">
+		<result column="id" property="id" />
+		<result column="u_id1" property="userTableId1" />
+		<result column="u_id2" property="userTableId2" />
+		<result column="join_date" property="joinDate" />
+		<result column="userid" property="friendUserid" />
+		<result column="calorie" property="calorie" />
+		<result column="minute" property="minute" />
+		
+	</resultMap>	
+	
+	<!-- 친구인 경우 -->
+	<!-- 친구 목록 조회(운동 시간순 정렬) -->
+	<select id="selectAllFriend" parameterType="friend" resultMap="friendMap">
+		SELECT id u_id2, userid, calorie, minute
+		FROM user LEFT OUTER JOIN (SELECT u_id, SUM(calorie) calorie, SUM(minute) minute FROM performance GROUP BY u_id) p
+		ON user.id = p.u_id
+		WHERE id IN (SELECT u_id2 FROM (SELECT u_id1, u_id2 From friend UNION SELECT u_id2 u_id1, u_id1 u_id2 FROM friend) f WHERE u_id1 = #{userTableId1})
+		<if test="userTableId2 != null">
+			AND userid LIKE '%${userTableId2}%'
+		</if>
+		ORDER BY minute DESC
+		
+	</select>
+	
+	<!-- 친구 목록 중 검색어를 포함하는 userid 갖는 친구 조회  -->
+	<!-- 
+	<select id="selectKeywordFriend" parameterType="String" resultMap="friendMap">
+
+	</select>
+	  -->
+	
+	
+	<!--  친구 확인 조회 -->
+	<!--
+	<select id="selectOne" parameterType="friend" resultType="friend">
+		SELECT * FROM friend 
+		WHERE u_id1 = #{uId1} AND u_id2 = #{uId2}
+	</select>
+	-->
+	
+	
+	<!-- 친구 삭제 -->
+	<delete id="deleteFriend" parameterType="friend">
+		DELETE FROM friend 
+		WHERE u_id1 = #{userTableId1} AND u_id2 = #{userTableId2}
+		OR u_id1 = #{userTableId2} AND u_id2 = #{userTableId1}
+	</delete>
+	
+	
+	<!-- 친구 아닌 경우 -->
+	<!-- 친구 외 사용자 중 검색어 포한한  아이디 갖는 사용자 조회 -->
+	<select id="selectAllNotFriend" parameterType="friend" resultType="user">
+		SELECT * FROM user 
+		WHERE id NOT IN (SELECT u_id2 FROM (SELECT u_id1, u_id2 From friend UNION SELECT u_id2 u_id1, u_id1 u_id2 FROM friend) f WHERE u_id1 = #{userTableId1})
+		AND userid LIKE '%${userTableId2}%' AND id != #{userTableId1}
+	</select>
+	
+	<!-- 친구 추가 -->
+	<insert id="insertFriend" parameterType="friend">
+		INSERT INTO friend
+		VALUES (#{id}, #{userTableId1}, #{userTableId2}, now())
+	</insert>
+	
+
+</mapper>

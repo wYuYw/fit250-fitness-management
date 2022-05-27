@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.fitness.model.dao.VideoDao">
+	<resultMap type="video" id="videoMap">
+		<id column="id" property="id" />
+		<result column="videoid" property="videoid" />
+		<result column="url" property="url" />
+		<result column="title" property="title" />
+		<result column="channel_name" property="channelName" />
+		<result column="part" property="part" />
+		<result column="level" property="level" />
+		<result column="description" property="description" />
+		<result column="thumbnail" property="thumbnail" />
+		<result column="upload_date" property="uploadDate" />
+		<result column="view_cnt" property="viewCnt" />
+		<result column="count_heart" property="countHeart" />
+	</resultMap>
+	
+	<!-- 전체 영상 조회 -->
+	<select id="selectAll" resultMap="videoMap">
+		SELECT * FROM video ORDER BY upload_date DESC
+		<!-- 
+		SELECT video.*, IFNULL(h.count_heart, 0) as count_heart 
+		FROM video LEFT OUTER JOIN (SELECT v_id, count(v_id) as count_heart FROM heart GROUP BY v_id) h 
+		ON video.id = h.v_id
+		ORDER BY upload_date DESC
+		 -->
+	</select>
+	
+	<!-- 
+	영상 목록 조회 
+	<select id="selectAll" parameterType="HashMap" resultMap="videoMap">
+		SELECT * FROM video
+		<if test="mode == 1">
+			WHERE channel_name LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="mode == 2">
+			WHERE title LIKE CONCAT('%', #{keyword}, '%')
+			OR description LIKE '%${keyword}%'
+		</if>
+		<if test="mode == 3">
+			WHERE title LIKE '%${keyword}%'
+		</if>
+		<if test="mode == 4">
+			WHERE description LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		
+	</select>
+	-->
+	
+	<!-- 영상 조회 -->
+	<select id="selectOne" parameterType="String" resultMap="videoMap">
+		SELECT * FROM video 
+		WHERE id = #{id}
+	</select>
+	
+	<!-- 영상 조회수 수정 -->
+	<update id="updateVideo" parameterType="String">
+	UPDATE video SET view_cnt = view_cnt+1
+	WHERE id = #{id};
+	</update>
+	
+	<!-- 조건에 맞는 영상 조회 (검색어) -->
+	<select id="selectByKeyword" parameterType="String" resultMap="videoMap">
+		SELECT * FROM video
+		WHERE channel_name LIKE CONCAT('%', #{keyword}, '%') 
+		OR title LIKE CONCAT('%', #{keyword}, '%') 
+		OR description LIKE '%${keyword}%'
+	</select>
+	
+	<!-- 같은 부위 영상 조회 (레벨 기준 영상 추천) -->
+	<select id="selectByLevel" parameterType="video" resultMap="videoMap">
+		SELECT * 
+    	FROM (SELECT * FROM video WHERE id != #{id} AND part = (SELECT part FROM video WHERE id = #{id}) AND level BETWEEN (SELECT level FROM video WHERE id = #{id})-1 AND (SELECT level FROM video WHERE id = #{id})+1 ORDER BY view_cnt DESC LIMIT 3) v
+    	ORDER BY level
+	</select>
+	
+	<!-- 최근 일주일 안에 하트 많이 받은 순으로 3개 조회 -->
+	<select id="selectHeartTop3" resultMap="videoMap">
+		SELECT id, videoid, url, title, channel_name, part, level, description, thumbnail, upload_date, view_cnt, IFNULL(h.count_heart, 0) as count_heart 
+		FROM video LEFT OUTER JOIN (SELECT v_id, count(v_id) as count_heart FROM heart WHERE heart_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND CURDATE() GROUP BY v_id) h 
+		ON video.id = h.v_id
+		ORDER BY count_heart DESC, upload_date DESC  LIMIT 3
+	</select>
+
+
+	<!-- 영상 찜 개수 수정 -->	
+	<update id="updateCountHeart" parameterType="video">
+		UPDATE video SET count_heart = #{countHeart}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 사용자의 관심 부위 영상 조회 -->
+	<select id="selectByUserInterest" parameterType="user" resultMap="videoMap">
+		SELECT * FROM video
+		WHERE part = #{interest1} OR part = #{interest2}
+		ORDER BY upload_date DESC, count_heart DESC LIMIT 4
+	</select>
+	
+	<!-- 사용자가 찜한 영상 조회 -->
+	<select id="selectByUserHeart" parameterType="String" resultMap="videoMap">
+		SELECT * FROM video
+		WHERE id IN (SELECT v_id FROM heart WHERE u_id = #{userTableId})
+	</select>
+
+</mapper>

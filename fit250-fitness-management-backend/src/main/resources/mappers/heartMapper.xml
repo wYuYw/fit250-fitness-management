@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.fitness.model.dao.HeartDao">
+	<resultMap type="heart" id="heartMap">
+		<result column="id" property="id" />
+		<result column="u_id" property="userId" />
+		<result column="v_id" property="videoId" />
+		<result column="heart_date" property="heartDate" />
+	</resultMap>	
+	
+	<!-- 찜 정보 등록 -->
+	<insert id="insertHeart" parameterType="heart">
+		INSERT INTO heart
+		VALUES(#{id}, #{userId}, #{videoId}, now())
+	</insert>
+	
+	<!-- 찜 정보 삭제 -->
+	<delete id="deleteHeart" parameterType="heart">
+		DELETE FROM heart
+		WHERE u_id = #{userId} AND v_id = #{videoId}
+	</delete>
+	
+	<!-- 찜 정보 조회 -->
+	<select id="selectHeart" parameterType="heart" resultMap="heartMap">
+		SELECT * FROM heart
+		WHERE u_id = #{userId} AND v_id = #{videoId}
+	</select>
+	
+</mapper>
