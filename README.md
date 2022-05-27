@@ -35,10 +35,6 @@ You can watch promotion video through this link.
 
 [Fit250 promotion](https://youtu.be/CmDBMZjj8tU)
 
-You can visit the website through this link.
-
-[Fit250]()
-
 # Project Details
 
 ## 1. Customer
